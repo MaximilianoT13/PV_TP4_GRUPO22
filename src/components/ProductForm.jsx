@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 
-const FormularioProducto=()=>{
+const FormularioProducto=({guardar,prodEdit})=>{
 const [pid,setPid]=useState(1);
 
 const [error,setError]=useState({
@@ -8,15 +8,17 @@ const [error,setError]=useState({
      precioErr: "",
      stockErr: ""
 });
-
-const [producto,setProducto]=useState({
+const aux={
     id: "",
     descripcion: "",
     precio: "",
     descuento: 0,
     stock: "",
     precioDesc: 0,
-})
+};
+
+const [producto,setProducto]=useState(aux)
+
 
 useEffect(()=>{
   const precio = parseFloat(producto.precio);
@@ -68,15 +70,27 @@ const verificarValor=()=>{
     return ok;
 };
 
+useEffect(()=>{
+    if(prodEdit)
+        setProducto(prodEdit);
+    else
+        setProducto(aux);
+},[prodEdit])
 
-const guardarProducto=()=>{
-    
+const guardarProducto=()=>{  
+
+
     if(verificarValor()){
-    const nuevoProducto = { ...producto, id: pid };
-    setProducto(nuevoProducto);
-    setPid(pid + 1);
-    console.log(nuevoProducto);
-    guardar(nuevoProducto);
+        if(prodEdit){
+            guardar(producto)
+            
+        }
+        else{
+              const nuevoProducto = { ...producto, id: pid };
+      setPid(pid + 1); 
+      guardar(nuevoProducto);
+        }
+        setProducto(aux)
  }
 }
 
@@ -85,13 +99,10 @@ return(
    <label>Descripcion: <input value={producto.descripcion} onChange={(x)=>setProducto({...producto,descripcion: x.target.value})} ></input><br/></label>
    {error.descripcionErr !=="" && <p style={{color: "red"}}>{error.descripcionErr}</p>}
 
-   <label>Precio: <input value={producto.precio} onChange={(x)=>setProducto({...producto,precio: x.target.value})}></input><br/></label>
+   <label>Precio: <input type="number" value={producto.precio} onChange={(x)=>setProducto({...producto,precio: x.target.value})}></input><br/></label>
+   {error.precioErr !== "" && <p style={{ color: "red" }}>{error.precioErr}</p>}
    
-   
-  <label>Descuento: 
-  <select
-  value={producto.descuento}
-  onChange={(e) => setProducto({ ...producto, descuento: parseInt(e.target.value) })}>
+  <label>Descuento: <select value={producto.descuento} onChange={(e) => setProducto({ ...producto, descuento: parseInt(e.target.value) })}>
   <option value="0">0%</option>
   <option value="10">10%</option>
   <option value="20">20%</option>
@@ -107,7 +118,13 @@ return(
     <label>Stock:</label>
     <input type="number" min="1" step="1" value={producto.stock} onChange={(x)=>setProducto({...producto,stock: x.target.value})}></input> <br/>
     {error.stockErr !== "" && <p style={{color:"red"}}>{error.stockErr}</p>}
+
+    { prodEdit ? (
+    <button onClick={guardarProducto}>Editar</button>) 
+    : (
     <button onClick={guardarProducto}>Guardar</button>
+    )
+     }
 
 </div>
 );
