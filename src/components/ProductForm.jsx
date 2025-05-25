@@ -4,69 +4,60 @@ const FormularioProducto=({guardar,prodEdit})=>{
 const [pid,setPid]=useState(1);
 
 const [error,setError]=useState({
-     descripcionErr: "",
-     precioErr: "",
-     stockErr: ""
+     descripcionError: "",
+     precioError: "",
+     stockError: ""
 });
+
 const aux={
     id: "",
     descripcion: "",
-    precio: "",
+    precioUnitario: 0,
     descuento: 0,
     stock: "",
-    precioDesc: 0,
+    precioConDescuento: 0,
 };
 
 const [producto,setProducto]=useState(aux)
 
 
 useEffect(()=>{
-  const precio = parseFloat(producto.precio);
-
+  const precio = parseFloat(producto.precioUnitario);
+ 
   if(!isNaN(precio))
   {
     if(producto.descuento===0)
-       setProducto((prev)=>({...prev,precioDesc: precio}));
+        setProducto((prev)=>({...prev,precioConDescuento: precio}));
     else
-       setProducto((prev)=>({...prev,precioDesc: (precio * (1 - producto.descuento/100)).toFixed(2)}));
+        setProducto((prev)=>({...prev,precioConDescuento: parseFloat((precio * (1 - producto.descuento/100)).toFixed(2))}));
   } 
   else 
-    setProducto((prev)=>({...prev,precioDesc: ""}));
+    setProducto((prev)=>({...prev,precioConDescuento: ""}));
 
-},[producto.precio,producto.descuento]);
+},[producto.precioUnitario,producto.descuento]);
 
 const verificarValor=()=>{
      let ok = true
      const stock= Number(producto.stock);
-     const errores={precioErr: "", descripcionErr: "", stockErr: ""}
-
-//validar PRECIO
-    if(producto.precio.trim()==="")
-    {
-        errores.precioErr= "Este campo no puede estar vacio"
-        ok=false
-        
+     const vacio={precioError: "", descripcionError: "", stockError: ""}
+//validar PRECIO UNITARIO
+    if (!producto.precioUnitario || producto.precioUnitario <= 0) {
+        vacio.precioError = "El precio debe ser mayor que 0";
+        ok = false;
     }
-    else if(isNaN(producto.precio)){
-        errores.precioErr="Debe colocar valores numericos"
-        ok=false
+//validar STOCK
+    if (!stock || stock < 1 || !Number.isInteger(stock)) {
+        vacio.stockError = "El stock debe ser un número entero mayor que 0";
+        ok = false;
     }
 //validar DESCRIPCION
     if(producto.descripcion.trim()==="")
     {
-        errores.descripcionErr = "Debe colocar el nombre del producto"
+        vacio.descripcionError = "Este campo no puede estar vacio"
         ok=false
     }
 
-    if(producto.stock.trim()==="") {
-        errores.stockErr = "El campo no puede estar vacio"
-        ok=false
-    }
-    else if(!Number.isInteger(stock) || stock<=0){
-        errores.stockErr = "Debe ingresar un numero entero mayor a 0"
-        ok=false
-    }
-    setError(errores)
+    setError(vacio)
     return ok;
 };
 
@@ -75,58 +66,70 @@ useEffect(()=>{
         setProducto(prodEdit);
     else
         setProducto(aux);
+    setError({
+       descripcionError: "",
+       precioError: "",
+       stockError: ""
+    })
 },[prodEdit])
 
-const guardarProducto=()=>{  
 
+const handleChange=(e)=>{
+   const { name, value} = e.target;
+   setProducto(prev=>({...prev, [name]: name === "descuento" ? parseInt(value) : value}))
+}
 
+const guardarProducto=(e)=>{  
+    e.preventDefault()
     if(verificarValor()){
         if(prodEdit){
             guardar(producto)
-            
+            setProducto(aux);
         }
         else{
-              const nuevoProducto = { ...producto, id: pid };
-      setPid(pid + 1); 
-      guardar(nuevoProducto);
+            const nuevoProducto = { ...producto, id: pid };
+            setPid(pid + 1); 
+            guardar(nuevoProducto);
+            setProducto(aux)
         }
-        setProducto(aux)
+
  }
 }
 
 return(
-<div>
-   <label>Descripcion: <input value={producto.descripcion} onChange={(x)=>setProducto({...producto,descripcion: x.target.value})} ></input><br/></label>
-   {error.descripcionErr !=="" && <p style={{color: "red"}}>{error.descripcionErr}</p>}
 
-   <label>Precio: <input type="number" value={producto.precio} onChange={(x)=>setProducto({...producto,precio: x.target.value})}></input><br/></label>
-   {error.precioErr !== "" && <p style={{ color: "red" }}>{error.precioErr}</p>}
+<form onSubmit={guardarProducto}>
+   <label htmlFor="descripcion">Descripcion: </label>
+   <input id="descripcion" name="descripcion" value={producto.descripcion} onChange={handleChange}></input><br/>
+   {error.descripcionError !=="" && <p style={{color: "red"}}>{error.descripcionError}</p>}
+
+   <label htmlFor="precio">Precio: </label>
+   <input id="precio" min="1" name="precioUnitario" type="number" value={producto.precioUnitario} onChange={handleChange}></input><br/>
+   {error.precioError !== "" && <p style={{ color: "red" }}>{error.precioError}</p>}
    
-  <label>Descuento: <select value={producto.descuento} onChange={(e) => setProducto({ ...producto, descuento: parseInt(e.target.value) })}>
-  <option value="0">0%</option>
-  <option value="10">10%</option>
-  <option value="20">20%</option>
-  <option value="30">30%</option>
-  <option value="40">40%</option>
-  <option value="50">50%</option>
-  <option value="75">75%</option>
+  <label htmlFor="descuento">Descuento:  </label>  
+  <select id="descuento" name="descuento" value={producto.descuento} onChange={handleChange}>
+    <option value="0">0%</option>
+    <option value="10">10%</option>
+    <option value="20">20%</option>
+    <option value="30">30%</option>
+    <option value="40">40%</option>
+    <option value="50">50%</option>
+    <option value="75">75%</option>
   </select>
-  </label>  
+  
+  <p className="precio-descuento">Precio con Descuento: ${producto.precioConDescuento}</p>
+   
+  <label htmlFor="stock">Stock:</label>
+    <input id="stock" name="stock" type="number" min="1" step="1" value={producto.stock} onChange={handleChange}></input><br/>
+    {error.stockError !== "" && <p style={{color:"red", fontFamily: "arial"}}>{error.stockError}</p>}
+   
+    <button type="submit">
+    { prodEdit ? "Editar" : "Guardar"}
+    </button>
 
-    <p>Precio con Descuento: {producto.precioDesc}</p>
+</form>
 
-    <label>Stock:</label>
-    <input type="number" min="1" step="1" value={producto.stock} onChange={(x)=>setProducto({...producto,stock: x.target.value})}></input> <br/>
-    {error.stockErr !== "" && <p style={{color:"red"}}>{error.stockErr}</p>}
-
-    { prodEdit ? (
-    <button onClick={guardarProducto}>Editar</button>) 
-    : (
-    <button onClick={guardarProducto}>Guardar</button>
-    )
-     }
-
-</div>
 );
 
 }

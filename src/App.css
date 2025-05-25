@@ -4,39 +4,78 @@
   padding: 2rem;
   text-align: center;
 }
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+h2{
+  font-style: initial;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+body{
+  background-image: url('https://static.vecteezy.com/system/resources/previews/004/941/847/non_2x/cosmetic-background-for-product-branding-and-packaging-presentation-geometry-form-circle-molding-on-podium-stage-with-shadow-of-leaf-background-design-eps10-vector.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+input{
+  
+  border: 2px solid;
+  border-radius: 10px;
 }
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#buscar{
+  width: 100%;  
+  height: 25px; 
+  max-width: 400px;   
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.formulario{
+  font-family: sans-serif;
+  color: rgb(49, 49, 49);
+  background-color: #e6e6e6;
+  padding: 2rem;
+  border-width: 1px;
+  border-radius: 10px;
 }
-
-.card {
-  padding: 2em;
+.registro{
+  margin-bottom: 10px;
 }
 
-.read-the-docs {
-  color: #888;
+.formulario label, .precio-descuento{
+  font-weight: bold;
+  font-size: large;
+}
+
+.registro button {
+
+  font-family: 'Times New Roman', serif;
+  color: white;
+  font-weight: bold;
+  background-color: rgb(15, 167, 65);
+  border-radius: 10px;
+  padding: 10px 30px;
+  cursor: pointer;
+  outline: none;
+}
+
+.registro button:hover {
+  background-color: rgb(10, 130, 50);
+}
+
+.boton-editar{
+  background-color: rgb(57, 68, 221);
+  margin-right: 10px;
+  margin-left: 5px;
+
+}
+.boton-eliminar{
+   background-color: rgb(240, 41, 27);
+   margin-right: 5px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th {
+  background-color: #7094e2;
+}
+th, td {
+  padding: 10px;
+  border: 1px solid #000000;
+  text-align: center;
 }
