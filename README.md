@@ -1,12 +1,15 @@
-# React + Vite
+# TRABAJO PRACTICO Nº4 - GRUPO 22 </h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## INTEGRANTES
 
-Currently, two official plugins are available:
+- TARCAYA, Gabriel Maximiliano - MaximilianoT13
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Descripcion
 
-## Expanding the ESLint configuration
+Proyecto desarrollado en React para agregar productos mediante un formulario, contando con las siguientes características:
+- Cálculo automático del precio final (Precio con descuento).
+- Validación de campos (precio, stock, descripción).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+La aplicación también permite gestionar los datos agregados con las siguientes opciones:
+- Eliminar y modificar.
+- Búsqueda en tiempo real por descripción o ID.
